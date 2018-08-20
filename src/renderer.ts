@@ -5,7 +5,7 @@ import { ServerStyleSheet, StyleSheetManager } from "styled-components";
 
 import PDFApp, { IPDFAppProps } from "./components/PDFApp";
 
-const insertInPage = (head, body) =>
+const insertInPage = (head: string, body: string): string =>
   `<!DOCTYPE html><html><head>${ head }</head><body>${ body }</body></html>`;
 
 export default class Renderer {
