@@ -31,27 +31,25 @@ const ImageGallery = styled.ul`
   }
 `;
 
-export interface IPDFAppProps { message?: string; }
+export interface IPDFAppProps { message: string; imageList: Array<string>; }
 
 export default class PDFApp extends React.Component<IPDFAppProps, {}> {
   public render() {
 
-    const { message } = this.props;
+    const { message, imageList } = this.props;
 
     return (
       <div>
         <BlueHeader>Hello from PDF Service!</BlueHeader>
         <h3>{ message }</h3>
         <ImageGallery>
-          <li>
-            <img src = "https://images.unsplash.com/photo-1534759846116-5799c33ce22a" />
-          </li>
-          <li>
-            <img src = "https://images.unsplash.com/photo-1534782337394-475a9937243a" />
-          </li>
-          <li>
-            <img src = "https://images.unsplash.com/photo-1534681636152-036b7342da0e" />
-          </li>
+          {
+            imageList.map((imageSrc, index) => (
+              <li key = { index }>
+                <img src = { imageSrc } />
+              </li>
+            ))
+          }
         </ImageGallery>
       </div>
     );

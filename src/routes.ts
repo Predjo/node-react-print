@@ -3,6 +3,12 @@ import * as puppeteer from "puppeteer";
 
 import Renderer from "./renderer";
 
+const imageList = [
+  "https://images.unsplash.com/photo-1534759846116-5799c33ce22a",
+  "https://images.unsplash.com/photo-1534782337394-475a9937243a",
+  "https://images.unsplash.com/photo-1534681636152-036b7342da0e",
+];
+
 export class Routes {
   public routes(app): void {
 
@@ -19,7 +25,7 @@ export class Routes {
       // tslint:disable-next-line
       console.log("PDF creation started");
 
-      const message = req.query.message;
+      const message = req.query.message || "Hello World";
       const name: string = req.query.name || "ReactPDF";
       const renderer: Renderer = new Renderer();
 
@@ -28,7 +34,7 @@ export class Routes {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
 
-        const pageHtml = renderer.renderMessage(message);
+        const pageHtml = renderer.renderPage(message, imageList);
 
         await page.setContent(pageHtml);
 

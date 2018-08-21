@@ -10,8 +10,8 @@ const insertInPage = (head: string, body: string): string =>
 
 export default class Renderer {
 
-  public renderMessage(message: string): string {
-    const props: IPDFAppProps = { message };
+  public renderPage(message: string, imageList: Array<string>): string {
+    const props: IPDFAppProps = { message, imageList };
     const sheet = new ServerStyleSheet();
     const component = React.createElement(PDFApp, props, null);
 
