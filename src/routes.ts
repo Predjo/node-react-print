@@ -16,30 +16,55 @@ export class Routes {
     app.route("/pdf")
     .get((req: Request, res: Response) => {
 
+      // tslint:disable-next-line
+      console.log("PDF creation started");
+
       const message = req.query.message;
       const name: string = req.query.name || "ReactPDF";
       const renderer: Renderer = new Renderer();
 
-      (async () => {
-       const browser = await puppeteer.launch();
-       const page = await browser.newPage();
+      (
+        async () => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
 
-       const pageHtml = renderer.renderMessage(message);
+        const pageHtml = renderer.renderMessage(message);
 
-       await page.setContent(pageHtml);
+        await page.setContent(pageHtml);
 
-       const file = await page.pdf({ format: "A4", displayHeaderFooter: false, landscape: true });
+        await page.evaluate(waitForImagesToLoad);
 
-       await browser.close();
+        // Hacky way to wait for all the images
+        // await page.goto(`data:text/html,${pageHtml}`, { waitUntil: "networkidle0" });
 
-       res.writeHead(200, {
-        "Content-Disposition": `attachment; filename=${ name }.pdf`,
-        "Content-Length": file.length,
-        "Content-Type": "application/pdf",
-      });
+        const file = await page.pdf({ format: "A4", displayHeaderFooter: false, landscape: true });
 
-       res.end(file);
-     })();
-   });
+        await browser.close();
+
+        res.writeHead(200, {
+          "Content-Disposition": `attachment; filename=${ name }.pdf`,
+          "Content-Length": file.length,
+          "Content-Type": "application/pdf",
+        });
+
+        res.end(file);
+
+        // tslint:disable-next-line
+        console.log("PDF creation ended");
+       })();
+     });
   }
+}
+
+async function waitForImagesToLoad() {
+  const selectors = Array.from(document.querySelectorAll("img"));
+
+  await Promise.all(selectors.map((img) => {
+    if (img.complete) { return true; }
+
+    return new Promise((resolve, reject) => {
+      img.addEventListener("load", resolve);
+      img.addEventListener("error", reject);
+    });
+  }));
 }

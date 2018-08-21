@@ -4,7 +4,7 @@
         "moduleResolution": "node",
         "pretty": true,
         "sourceMap": true,
-        "target": "es6",
+        "target": "ESNext",
         "outDir": "./dist",
         "baseUrl": "./lib",
         "jsx": "react"
